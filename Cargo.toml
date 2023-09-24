@@ -1,0 +1,27 @@
+[package]
+name = "seven_days_to_time_rs"
+description = "A Rust Applicattion that is convert to the seven days to die settime features from human days hours and minutes."
+version = "1.0.0"
+edition = "2021"
+license-file = "LICENSE"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+opt-level = "z"
+debug = false
+split-debuginfo = '...'  # Platform-specific.
+debug-assertions = false
+overflow-checks = false
+lto = true
+panic = 'abort'
+incremental = false
+codegen-units = 16
+rpath = false
+
+[dependencies]
+clap = { version = "4.4.4", features = ["derive"] }
+
+[[bin]]
+name = "7dtt"
+path = "src/main.rs"
