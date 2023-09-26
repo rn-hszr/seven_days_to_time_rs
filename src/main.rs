@@ -1,35 +1,33 @@
 //! 7 days to die のsettimeコマンドによる日付設定を楽にします。
-//! 
+//!
 //! # Install
-//! 
+//!
 //! ```cmd
 //! git clone <URL>
 //! ```
-//! 
+//!
 //! ```cmd
 //! cargo install --path .
 //! ```
 //!
 //! # Examples
-//! 
+//!
 //! ```cmd
 //! 7dtt 3 16 22
 //! 64367
 //! settime 64367
 //! st 64367
 //! ```
-//! 
+//!
 //! # Uninstall
-//! 
+//!
 //! ```cmd
 //! cargo uninstall seven_days_to_time_rs
 //! ```
 
-
+use clap::CommandFactory;
 use clap::Parser;
-use clap::Command;
 use std::fmt;
-
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -43,33 +41,29 @@ struct Arguments {
 
     /// 分を指定します。
     #[arg(default_value = "0")]
-    minute: usize
+    minute: usize,
 }
-
 
 struct SevendaysDatetimes {
     day: u8,
     hour: u8,
-    minute: u8
+    minute: u8,
 }
-
 
 impl SevendaysDatetimes {
     fn new(day: usize, hour: usize, minute: usize) -> Self {
         Self {
-            day: day as u8, 
+            day: day as u8,
             hour: hour as u8,
-            minute: minute as u8
+            minute: minute as u8,
         }
     }
 }
-
 
 trait Calc {
     /// convert `sevendays_datetimes` to utc time.
     fn to_utctime(&self) -> Option<u32>;
 }
-
 
 impl Calc for SevendaysDatetimes {
     fn to_utctime(&self) -> Option<u32> {
@@ -89,14 +83,15 @@ impl fmt::Display for SevendaysDatetimes {
     }
 }
 
-
 fn main() {
     let arguments = match Arguments::try_parse() {
         Ok(ok) => ok,
         Err(_err) => {
-            let mut cmd = Command::new("7dtt");
-            let _ = cmd.print_long_help().unwrap();
-            return
+            Arguments::command_for_update()
+                .name("7dtt")
+                .print_long_help()
+                .unwrap();
+            return;
         }
     };
     match arguments.day {
@@ -104,8 +99,7 @@ fn main() {
             println!("arguments \"day\" must be set to higher than 0 (1~)");
             return;
         }
-        _ => {
-        }
+        _ => {}
     }
     let svdtt = SevendaysDatetimes::new(arguments.day, arguments.hour, arguments.minute);
     if let Some(utc) = svdtt.to_utctime() {
