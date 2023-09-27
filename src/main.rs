@@ -30,7 +30,6 @@ use clap::Parser;
 use std::fmt;
 
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
 struct Arguments {
     /// 日を指定します。
     day: usize,
@@ -87,7 +86,7 @@ fn main() {
     let arguments = match Arguments::try_parse() {
         Ok(ok) => ok,
         Err(_err) => {
-            Arguments::command_for_update()
+            Arguments::command()
                 .name("7dtt")
                 .print_long_help()
                 .unwrap();
