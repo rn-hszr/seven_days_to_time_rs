@@ -24,6 +24,7 @@
 //! ```bash
 //! $ cargo uninstall seven_days_to_time_rs
 //! ```
+mod test;
 
 use clap::CommandFactory;
 use clap::Parser;
@@ -61,11 +62,11 @@ impl SevendaysDatetimes {
 
 trait Calc {
     /// convert `sevendays_datetimes` to utc time.
-    fn to_utctime(&self) -> Option<u32>;
+    fn to_settime(&self) -> Option<u32>;
 }
 
 impl Calc for SevendaysDatetimes {
-    fn to_utctime(&self) -> Option<u32> {
+    fn to_settime(&self) -> Option<u32> {
         let day = (self.day as u32 - 1) * 24000;
         let hour = self.hour as u32 * 1000;
         let minute = (self.minute as f32 * (1000.0 / 60.0)).ceil();
@@ -101,7 +102,7 @@ fn main() {
         _ => {}
     }
     let svdtt = SevendaysDatetimes::new(arguments.day, arguments.hour, arguments.minute);
-    if let Some(utc) = svdtt.to_utctime() {
+    if let Some(utc) = svdtt.to_settime() {
         println!("{}", utc);
         println!("settime {}", utc);
         println!("st {}", utc);
